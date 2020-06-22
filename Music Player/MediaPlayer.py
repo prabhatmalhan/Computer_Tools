@@ -100,7 +100,7 @@ root.geometry("1000x233+100+100")
 root.resizable(False,False)
 
 # pause-play button
-pbutton = Button(root,text="pause",width=15,command=playpause)
+pbutton = Button(root,text="pause",width=15,command=playpause,state=DISABLED)
 pbutton.place(x=70,y=130)
 
 # filename & playlist extension container
@@ -113,7 +113,7 @@ Button(root,text='add music',width=15,command=lambda : x.extend(filedialog.askop
 Button(root,text="stop",width=15,command=root.destroy).place(x=310,y=93)
 
 # next button
-nexts = Button(root,text="next",width=15,command=playnext)
+nexts = Button(root,text="next",width=15,command=playnext,state=DISABLED)
 nexts.place(x=550,y=55)
 
 # mute unmute button
@@ -121,7 +121,7 @@ muteun=Button(root,text='mute',width=15,command=muteunmute)
 muteun.place(x=550,y=130)
 
 # previous button
-prevs = Button(root,text="previous",width=15,command=playprev)
+prevs = Button(root,text="previous",width=15,command=playprev,state=DISABLED)
 prevs.place(x=70,y=55)
 
 #volume buttons
@@ -144,20 +144,18 @@ VolumebarSlide.place(x=935,y=55)
 VolumebarLabel=Label(root,text=f'{int(volume*100)}%',font=('Agency FB',9),width=4)
 VolumebarLabel.place(x=935,y=155)
 
-
 x=list()
-while len(x)==0:
-    x.extend(filedialog.askopenfilename(parent=root,title='Select music file',filetypes=[("Audio Files","*.mp3")],multiple=True))
 FileLabel=Entry(root,bg='cyan',width = 100,state=DISABLED,justify=CENTER)
 FileLabel.place(x=127,y=10)
-playnext()
 while True:    
     updatepb()
 
     if  mixer.music.get_busy()==True:
         pass
-    else:
-        sleep(2)
+    elif len(x)>0:
+        nexts['state']=ACTIVE
+        prevs['state']=ACTIVE
+        pbutton['state']=ACTIVE
         playnext()
     try:
         root.update_idletasks()
