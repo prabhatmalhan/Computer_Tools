@@ -8,7 +8,6 @@ from tkinter import filedialog
 from pygame import mixer 
 from mutagen.mp3 import MP3
 from datetime import timedelta
-from time import sleep
 
 paused = False
 muted = False
@@ -16,13 +15,16 @@ i=-1
 mixer.init()
 volume=0.5
 def  playnext():
-    global i,x,ProgressbarSlide,FileLabel
+    global i,x,ProgressbarSlide,FileLabel,muted,VolumebarSlide
     i=i+1
     if i==len(x):i=0
     mixer.music.stop()
-    mixer.music.load(x[i])
     FileLabel.configure(textvariable=StringVar(root,x[i]))
-    mixer.music.set_volume(volume)
+    if muted==True:
+        mixer.music.set_volume(0)
+    else:
+        mixer.music.set_volume(volume)
+    mixer.music.load(x[i])
     ProgressbarSlide['maximum']=int(MP3(x[i]).info.length)
     mixer.music.play()
 
@@ -31,9 +33,12 @@ def  playprev():
     i=i-1
     if i<0:i=len(x)-1
     mixer.music.stop()
-    mixer.music.load(x[i])
     FileLabel['textvariable']=StringVar(root,x[i])
-    mixer.music.set_volume(volume)
+    if muted==True:
+        mixer.music.set_volume(0)
+    else:
+        mixer.music.set_volume(volume)
+    mixer.music.load(x[i])
     ProgressbarSlide['maximum']=int(MP3(x[i]).info.length)  
     mixer.music.play()
 
