@@ -64,7 +64,7 @@ try:
     if num in range(1,92):
         print("\n")
         try:
-            x = "".join(open("data","r").readlines()).split('\n')[num].split()
+            x = "".join(open("data","r").readlines()).split('\n')[num-1].split()
         except Exception:
             print('Data File not Found!!')
             exit()
