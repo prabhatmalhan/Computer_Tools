@@ -6,8 +6,12 @@ Author : PRABHAT MALHAN
 Inspiration : Angel Security Team
 """
 
-import requests,re,os
-import datetime
+try:
+    import requests
+except Exception:
+    os.system('pip install requests')
+    import requests
+import datetime,re,os
 
 now = datetime.datetime.now()
 
@@ -64,7 +68,7 @@ try:
     if num in range(1,92):
         print("\n")
         try:
-            x = "".join(open("data","r").readlines()).split('\n')[num].split()
+            x = "".join(open("data","r").readlines()).split('\n')[num-1].split()
         except Exception:
             print('Data File not Found!!')
             exit()
