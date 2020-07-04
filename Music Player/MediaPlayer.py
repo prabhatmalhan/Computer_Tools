@@ -15,7 +15,7 @@ i=-1
 mixer.init()
 volume=0.5
 def  playnext():
-    global i,x,ProgressbarSlide,FileLabel,muted,VolumebarSlide
+    global i,x,ProgressbarSlide,FileLabel,muted,pbutton,paused
     i=i+1
     if i==len(x):i=0
     mixer.music.stop()
@@ -24,12 +24,14 @@ def  playnext():
         mixer.music.set_volume(0)
     else:
         mixer.music.set_volume(volume)
+    pbutton['text']='pause'
+    paused=False
     mixer.music.load(x[i])
     ProgressbarSlide['maximum']=int(MP3(x[i]).info.length)
     mixer.music.play()
 
 def  playprev():
-    global i,x,ProgressbarSlide
+    global i,x,ProgressbarSlide,FileLabel,muted,pbutton,paused
     i=i-1
     if i<0:i=len(x)-1
     mixer.music.stop()
@@ -38,6 +40,8 @@ def  playprev():
         mixer.music.set_volume(0)
     else:
         mixer.music.set_volume(volume)
+    pbutton['text']='pause'
+    paused=False
     mixer.music.load(x[i])
     ProgressbarSlide['maximum']=int(MP3(x[i]).info.length)  
     mixer.music.play()
