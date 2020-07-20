@@ -11,12 +11,13 @@ from datetime import timedelta
 
 paused = False
 muted = False
+looped = False
 i=-1
 mixer.init()
 volume=0.5
 def  playnext():
-    global i,x,ProgressbarSlide,FileLabel,muted,pbutton,paused
-    i=i+1
+    global i,x,ProgressbarSlide,FileLabel,muted,pbutton,paused,looped
+    if looped==False : i=i+1
     if i==len(x):i=0
     mixer.music.stop()
     FileLabel.configure(textvariable=StringVar(root,x[i]))
@@ -90,6 +91,15 @@ def muteunmute():
         muteun['text']='mute'
         muted = False
 
+def loop():
+    global loopb,looped
+    if looped == False:
+        looped = True
+        loopb['text']='repeat : on'
+    else:
+        looped = False
+        loopb['text']='repeat : off'
+
 
 def updatepb():
     try:
@@ -119,7 +129,7 @@ Label(root,text="File Name :").place(x=50,y=8)
 Button(root,text='add music',width=15,command=lambda : x.extend(filedialog.askopenfilename(parent=root,title='Select music file',filetypes=[("Audio Files","*.mp3")],multiple=True))).place(x=780,y=8)
 
 #stop button
-Button(root,text="stop",width=15,command=root.destroy).place(x=310,y=93)
+Button(root,text="stop",width=15,command=root.destroy).place(x=310,y=55)
 
 # next button
 nexts = Button(root,text="next",width=15,command=playnext,state=DISABLED)
@@ -146,6 +156,10 @@ ProgressbarEt=Label(ProgressbarContainer)
 ProgressbarEt.grid(row=0,column=2)
 ProgressbarSt=Label(ProgressbarContainer)
 ProgressbarSt.grid(row=0,column=0)
+
+#Loop
+loopb = Button(root,text = 'repeat : off',width=15,command=loop)
+loopb.place(x=310,y=130)
 
 # Volume Bar setup
 VolumebarSlide=Progressbar(root,length=100,orient=VERTICAL,value=volume,maximum=1.0)
