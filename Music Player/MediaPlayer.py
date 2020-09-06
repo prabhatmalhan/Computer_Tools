@@ -5,20 +5,25 @@
 from tkinter import *
 from tkinter.ttk import Progressbar
 from tkinter import filedialog
+from tkinter import messsagebox
 from pygame import mixer 
 from mutagen.mp3 import MP3
 from datetime import timedelta
 
 paused = False
 muted = False
-looped = False
+looped = 'off'
 i=-1
 mixer.init()
 volume=0.5
 def  playnext():
     global i,x,ProgressbarSlide,FileLabel,muted,pbutton,paused,looped
-    if looped==False : i=i+1
-    if i==len(x):i=0
+    if looped!='one' : i=i+1
+    if i==len(x):
+    	if looped == 'all':
+    		i=0
+		elif (looped == 'off'):
+			messsagebox.askretrycancel("askretrycancel","Queue Finish\n Wanna replay?")
     mixer.music.stop()
     FileLabel.configure(textvariable=StringVar(root,x[i]))
     if muted==True:
@@ -93,12 +98,15 @@ def muteunmute():
 
 def loop():
     global loopb,looped
-    if looped == False:
-        looped = True
-        loopb['text']='repeat : on'
+    if looped == 'off':
+        looped = 'one'
+        loopb['text']='repeat : one'
+    elif looped == 'one':
+        looped = 'all'
+        loopb['text']='repeat : all'
     else:
-        looped = False
-        loopb['text']='repeat : off'
+    	looped = 'off'
+		loopb['text']='repeat : off'
 
 
 def updatepb():
