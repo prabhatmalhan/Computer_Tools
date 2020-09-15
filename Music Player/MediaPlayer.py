@@ -42,12 +42,13 @@ def  playnext():
 
 def  playprev():
 	global i,x,ProgressbarSlide,FileLabel,muted,pbutton,paused,looped
-	if looped!='one' : i=i-1
-	if i<0:
-		if looped == 'all':
-			i=len(x)-1
-		elif (looped == 'off') :
-			i=0
+	if mixer.music.get_pos()/1000 <= 1.7 :
+		if looped!='one' : i=i-1
+		if i<0:
+			if looped == 'all':
+				i=len(x)-1
+			elif (looped == 'off') :
+				i=0
 	mixer.music.stop()
 	FileLabel['textvariable']=StringVar(root,x[i])
 	if muted==True:
