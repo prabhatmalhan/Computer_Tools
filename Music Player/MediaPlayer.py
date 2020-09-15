@@ -5,7 +5,7 @@
 from tkinter import *
 from tkinter.ttk import Progressbar
 from tkinter import filedialog
-from tkinter import messsagebox
+from tkinter import messagebox
 from pygame import mixer 
 from mutagen.mp3 import MP3
 from datetime import timedelta
@@ -17,107 +17,115 @@ i=-1
 mixer.init()
 volume=0.5
 def  playnext():
-    global i,x,ProgressbarSlide,FileLabel,muted,pbutton,paused,looped
-    if looped!='one' : i=i+1
-    if i==len(x):
-    	if looped == 'all':
-    		i=0
+	global i,x,ProgressbarSlide,FileLabel,muted,pbutton,paused,looped,root
+	mixer.music.stop()
+	if looped!='one' : i=i+1
+	if i==len(x):
+		if looped == 'all':
+			i=0
 		elif (looped == 'off'):
-			messsagebox.askretrycancel("askretrycancel","Queue Finish\n Wanna replay?")
-    mixer.music.stop()
-    FileLabel.configure(textvariable=StringVar(root,x[i]))
-    if muted==True:
-        mixer.music.set_volume(0)
-    else:
-        mixer.music.set_volume(volume)
-    pbutton['text']='pause'
-    paused=False
-    mixer.music.load(x[i])
-    ProgressbarSlide['maximum']=int(MP3(x[i]).info.length)
-    mixer.music.play()
+			if messagebox.askyesno("Queue FINISHED","Queue Finished\n Wanna replay from beginning?"):
+				i=0
+			else :
+				root.destroy()
+				return
+	FileLabel.configure(textvariable=StringVar(root,x[i]))
+	if muted==True:
+		mixer.music.set_volume(0)
+	else:
+		mixer.music.set_volume(volume)
+	pbutton['text']='pause'
+	paused=False
+	mixer.music.load(x[i])
+	ProgressbarSlide['maximum']=int(MP3(x[i]).info.length)
+	mixer.music.play()
 
 def  playprev():
-    global i,x,ProgressbarSlide,FileLabel,muted,pbutton,paused
-    i=i-1
-    if i<0:i=len(x)-1
-    mixer.music.stop()
-    FileLabel['textvariable']=StringVar(root,x[i])
-    if muted==True:
-        mixer.music.set_volume(0)
-    else:
-        mixer.music.set_volume(volume)
-    pbutton['text']='pause'
-    paused=False
-    mixer.music.load(x[i])
-    ProgressbarSlide['maximum']=int(MP3(x[i]).info.length)  
-    mixer.music.play()
+	global i,x,ProgressbarSlide,FileLabel,muted,pbutton,paused,looped
+	if looped!='one' : i=i-1
+	if i<0:
+		if looped == 'all':
+			i=len(x)-1
+		elif (looped == 'off') :
+			i=0
+	mixer.music.stop()
+	FileLabel['textvariable']=StringVar(root,x[i])
+	if muted==True:
+		mixer.music.set_volume(0)
+	else:
+		mixer.music.set_volume(volume)
+	pbutton['text']='pause'
+	paused=False
+	mixer.music.load(x[i])
+	ProgressbarSlide['maximum']=int(MP3(x[i]).info.length)  
+	mixer.music.play()
 
 def playpause():
-    global pbutton
-    global paused
-    if paused==False :
-        mixer.music.pause()
-        pbutton['text']="play"
-        paused=True
-    else :
-        mixer.music.unpause()
-        pbutton['text']='pause'
-        paused=False
+	global pbutton
+	global paused
+	if paused==False :
+		mixer.music.pause()
+		pbutton['text']="play"
+		paused=True
+	else :
+		mixer.music.unpause()
+		pbutton['text']='pause'
+		paused=False
 
 def volume_up():
-    global volume,VolumebarSlide,VolumebarSlide,muteun,muted
-    muted=False
-    muteun['text']='mute'
-    if volume<1:volume+=.05
-    volume=round(volume,2)
-    mixer.music.set_volume(volume)
-    VolumebarLabel['text']=f'{int(volume*100)}%'
-    VolumebarSlide['value']=volume
+	global volume,VolumebarSlide,VolumebarSlide,muteun,muted
+	muted=False
+	muteun['text']='mute'
+	if volume<1:volume+=.05
+	volume=round(volume,2)
+	mixer.music.set_volume(volume)
+	VolumebarLabel['text']=f'{int(volume*100)}%'
+	VolumebarSlide['value']=volume
 
 
 def volume_down():
-    global volume,VolumebarSlide,VolumebarSlide,muteun,muted
-    muted=False
-    muteun['text']='mute'
-    if volume>0:volume-=.05
-    volume=round(volume,2)
-    mixer.music.set_volume(volume)
-    VolumebarLabel['text']=f'{int(volume*100)}%'
-    VolumebarSlide['value']=volume
+	global volume,VolumebarSlide,VolumebarSlide,muteun,muted
+	muted=False
+	muteun['text']='mute'
+	if volume>0:volume-=.05
+	volume=round(volume,2)
+	mixer.music.set_volume(volume)
+	VolumebarLabel['text']=f'{int(volume*100)}%'
+	VolumebarSlide['value']=volume
 
 def muteunmute():
-    global muteun,muted
-    if muted == False:
-        mixer.music.set_volume(0)
-        muteun['text']='unmute'
-        muted = True
-    else:
-        mixer.music.set_volume(volume)
-        muteun['text']='mute'
-        muted = False
+	global muteun,muted
+	if muted == False:
+		mixer.music.set_volume(0)
+		muteun['text']='unmute'
+		muted = True
+	else:
+		mixer.music.set_volume(volume)
+		muteun['text']='mute'
+		muted = False
 
 def loop():
-    global loopb,looped
-    if looped == 'off':
-        looped = 'one'
-        loopb['text']='repeat : one'
-    elif looped == 'one':
-        looped = 'all'
-        loopb['text']='repeat : all'
-    else:
-    	looped = 'off'
+	global loopb,looped
+	if looped == 'off':
+		looped = 'one'
+		loopb['text']='repeat : one'
+	elif looped == 'one':
+		looped = 'all'
+		loopb['text']='repeat : all'
+	else:
+		looped = 'off'
 		loopb['text']='repeat : off'
 
 
 def updatepb():
-    try:
-        global ProgressbarSlide,ProgressbarEt,ProgressbarSt
-        sec=mixer.music.get_pos()//1000
-        ProgressbarSlide['value']=sec
-        ProgressbarEt['text']=f'{timedelta(seconds=int(MP3(x[i]).info.length))}'
-        ProgressbarSt['text']=f'{timedelta(seconds=int(sec))}'
-    except Exception:
-        pass
+	try:
+		global ProgressbarSlide,ProgressbarEt,ProgressbarSt
+		sec=mixer.music.get_pos()//1000
+		ProgressbarSlide['value']=sec
+		ProgressbarEt['text']=f'{timedelta(seconds=int(MP3(x[i]).info.length))}'
+		ProgressbarSt['text']=f'{timedelta(seconds=int(sec))}'
+	except Exception:
+		pass
 
 
 root = Tk()
@@ -179,18 +187,18 @@ x=list()
 FileLabel=Entry(root,bg='cyan',width = 100,state=DISABLED,justify=CENTER)
 FileLabel.place(x=127,y=10)
 while True:    
-    updatepb()
+	updatepb()
 
-    if  mixer.music.get_busy()==True:
-        pass
-    elif len(x)>0:
-        nexts['state']=ACTIVE
-        prevs['state']=ACTIVE
-        pbutton['state']=ACTIVE
-        playnext()
-    try:
-        root.update_idletasks()
-        root.update()
-    except Exception:
-        quit()
-        pass
+	if  mixer.music.get_busy()==True:
+		pass
+	elif len(x)>0:
+		nexts['state']=ACTIVE
+		prevs['state']=ACTIVE
+		pbutton['state']=ACTIVE
+		playnext()
+	try:
+		root.update_idletasks()
+		root.update()
+	except Exception:
+		quit()
+		pass
