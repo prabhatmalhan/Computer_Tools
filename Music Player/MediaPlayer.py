@@ -16,10 +16,10 @@ looped = 'off'
 i=-1
 mixer.init()
 volume=0.5
-def  playnext():
+def  playnext(button_press):
 	global i,x,ProgressbarSlide,FileLabel,muted,pbutton,paused,looped,root
 	mixer.music.stop()
-	if looped!='one' : i=i+1
+	if looped!='one' or button_press==1: i=i+1
 	if i==len(x):
 		if looped == 'all':
 			i=0
@@ -43,7 +43,7 @@ def  playnext():
 def  playprev():
 	global i,x,ProgressbarSlide,FileLabel,muted,pbutton,paused,looped
 	if mixer.music.get_pos()/1000 <= 1.7 :
-		if looped!='one' : i=i-1
+		i=i-1
 		if i<0:
 			if looped == 'all':
 				i=len(x)-1
@@ -149,7 +149,7 @@ Button(root,text='add music',width=15,command=lambda : x.extend(filedialog.askop
 Button(root,text="stop",width=15,command=root.destroy).place(x=310,y=55)
 
 # next button
-nexts = Button(root,text="next",width=15,command=playnext,state=DISABLED)
+nexts = Button(root,text="next",width=15,command=lambda:playnext(1),state=DISABLED)
 nexts.place(x=550,y=55)
 
 # mute unmute button
@@ -196,7 +196,7 @@ while True:
 		nexts['state']=ACTIVE
 		prevs['state']=ACTIVE
 		pbutton['state']=ACTIVE
-		playnext()
+		playnext(0)
 	try:
 		root.update_idletasks()
 		root.update()
