@@ -42,7 +42,7 @@ def  playnext(button_press):
 
 def  playprev():
 	global i,x,ProgressbarSlide,FileLabel,muted,pbutton,paused,looped
-	if mixer.music.get_pos()/1000 <= 1.7 :
+	if mixer.music.get_pos()/1000 <= 3.2 :
 		i=i-1
 		if i<0:
 			if looped == 'all':
@@ -74,10 +74,10 @@ def playpause():
 		paused=False
 
 def volume_up():
-	global volume,VolumebarSlide,VolumebarSlide,muteun,muted
+	global volume,VolumebarSlide,VolumebarLabel,muteun,muted
+	if volume<1 and muted==FALSE : volume+=.05
 	muted=False
 	muteun['text']='mute'
-	if volume<1:volume+=.05
 	volume=round(volume,2)
 	mixer.music.set_volume(volume)
 	VolumebarLabel['text']=f'{int(volume*100)}%'
@@ -85,23 +85,23 @@ def volume_up():
 
 
 def volume_down():
-	global volume,VolumebarSlide,VolumebarSlide,muteun,muted
+	global volume,VolumebarSlide,VolumebarLabel,muteun,muted
+	if volume>0 and muted==FALSE : volume-=.05
 	muted=False
 	muteun['text']='mute'
-	if volume>0:volume-=.05
 	volume=round(volume,2)
 	mixer.music.set_volume(volume)
 	VolumebarLabel['text']=f'{int(volume*100)}%'
 	VolumebarSlide['value']=volume
 
 def muteunmute():
-	global muteun,muted
+	global muteun,muted,volume
 	if muted == False:
 		mixer.music.set_volume(0)
 		muteun['text']='unmute'
 		muted = True
 	else:
-		mixer.music.set_volume(volume)
+		volume_up()
 		muteun['text']='mute'
 		muted = False
 
