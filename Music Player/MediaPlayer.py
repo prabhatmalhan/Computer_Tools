@@ -169,9 +169,9 @@ ProgressbarContainer=Label(root,bg='pale turquoise')
 ProgressbarContainer.place(x=50,y=190)
 ProgressbarSlide=Progressbar(ProgressbarContainer,length=825)
 ProgressbarSlide.grid(row=0,column=1)
-ProgressbarEt=Label(ProgressbarContainer,text = '--:--')
+ProgressbarEt=Label(ProgressbarContainer,text = '--:--:--')
 ProgressbarEt.grid(row=0,column=2)
-ProgressbarSt=Label(ProgressbarContainer,text = '--:--')
+ProgressbarSt=Label(ProgressbarContainer,text = '--:--:--')
 ProgressbarSt.grid(row=0,column=0)
 
 #Loop
