@@ -3,6 +3,7 @@
    Graphic Era University'''
    
 from tkinter import *
+import turtle
 from tkinter.ttk import Progressbar
 from tkinter import filedialog
 from tkinter import messagebox
@@ -17,49 +18,55 @@ i=-1
 mixer.init()
 volume=0.5
 def  playnext(button_press):
-	global i,x,ProgressbarSlide,FileLabel,muted,pbutton,paused,looped,root
-	mixer.music.stop()
-	if looped!='one' or button_press==1: i=i+1
-	if i==len(x):
-		if looped == 'all':
-			i=0
-		elif (looped == 'off'):
-			if messagebox.askyesno("Queue FINISHED","Queue Finished\n Wanna replay from beginning?"):
+	global x
+	lenx = len(x)
+	if lenx>0:
+		global i,ProgressbarSlide,FileLabel,muted,pbutton,paused,looped,root
+		mixer.music.stop()
+		if looped!='one' or button_press==1: i=i+1
+		if i==lenx:
+			if looped == 'all':
 				i=0
-			else :
-				root.destroy()
-				return
-	FileLabel.configure(textvariable=StringVar(root,x[i]))
-	if muted==True:
-		mixer.music.set_volume(0)
-	else:
-		mixer.music.set_volume(volume)
-	pbutton['text']='pause'
-	paused=False
-	mixer.music.load(x[i])
-	ProgressbarSlide['maximum']=int(MP3(x[i]).info.length)
-	mixer.music.play()
+			else:
+				if messagebox.askyesno("Queue FINISHED","Queue Finished\n Wanna replay from beginning?"):
+					i=0
+				else :
+					root.destroy()
+					return
+		FileLabel.configure(textvariable=StringVar(root,x[i]))
+		if muted==True:
+			mixer.music.set_volume(0)
+		else:
+			mixer.music.set_volume(volume)
+		pbutton['text']='pause'
+		paused=False
+		mixer.music.load(x[i])
+		ProgressbarSlide['maximum']=int(MP3(x[i]).info.length)
+		mixer.music.play()
 
 def  playprev():
-	global i,x,ProgressbarSlide,FileLabel,muted,pbutton,paused,looped
-	if mixer.music.get_pos()/1000 <= 3.2 :
-		i=i-1
-		if i<0:
-			if looped == 'all':
-				i=len(x)-1
-			elif (looped == 'off') :
-				i=0
-	mixer.music.stop()
-	FileLabel['textvariable']=StringVar(root,x[i])
-	if muted==True:
-		mixer.music.set_volume(0)
-	else:
-		mixer.music.set_volume(volume)
-	pbutton['text']='pause'
-	paused=False
-	mixer.music.load(x[i])
-	ProgressbarSlide['maximum']=int(MP3(x[i]).info.length)  
-	mixer.music.play()
+	global x
+	lenx = len(x)
+	if lenx>0:
+		global i,ProgressbarSlide,FileLabel,muted,pbutton,paused,looped
+		if mixer.music.get_pos()/1000 <= 3.2 :
+			i=i-1
+			if i<0:
+				if looped == 'all':
+					i=lenx-1
+				else :
+					i=0
+		mixer.music.stop()
+		FileLabel['textvariable']=StringVar(root,x[i])
+		if muted==True:
+			mixer.music.set_volume(0)
+		else:
+			mixer.music.set_volume(volume)
+		pbutton['text']='pause'
+		paused=False
+		mixer.music.load(x[i])
+		ProgressbarSlide['maximum']=int(MP3(x[i]).info.length)  
+		mixer.music.play()
 
 def playpause():
 	global pbutton
@@ -135,6 +142,19 @@ root.iconphoto(False,PhotoImage(file='icon.png'))
 root.geometry("1000x233+100+100")
 root.resizable(False,False)
 
+#key-bindings
+root.bind("<Right>",lambda bt:playnext(1))
+root.bind("<Left>",lambda bt:playprev())
+root.bind("<Up>",lambda bt:volume_up())
+root.bind("<Down>",lambda bt:volume_down())
+root.bind("<space>",lambda bt:playpause())
+root.bind("<r>",lambda bt:loop())
+root.bind("<R>",lambda bt:loop())
+root.bind("<Control-m>",lambda bt:muteunmute())
+root.bind("<Control-M>",lambda bt:muteunmute())
+root.bind("<Escape>",lambda bt:root.destroy())
+root.bind("<Return>",lambda bt:x.extend(filedialog.askopenfilename(parent=root,title='Select music file',filetypes=[("Audio Files","*.mp3")],multiple=True)))
+
 # pause-play button
 pbutton = Button(root,text="pause",width=15,command=playpause,state=DISABLED)
 pbutton.place(x=70,y=130)
@@ -142,7 +162,7 @@ pbutton.place(x=70,y=130)
 # filename & playlist extension container
 Label(root,text="File Name :").place(x=50,y=8)
 
-
+#Add Music Button
 Button(root,text='add music',width=15,command=lambda : x.extend(filedialog.askopenfilename(parent=root,title='Select music file',filetypes=[("Audio Files","*.mp3")],multiple=True))).place(x=780,y=8)
 
 #stop button
