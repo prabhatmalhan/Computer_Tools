@@ -70,15 +70,16 @@ def  playprev():
 
 def playpause():
 	global pbutton
-	global paused
-	if paused==False :
-		mixer.music.pause()
-		pbutton['text']="play"
-		paused=True
-	else :
-		mixer.music.unpause()
-		pbutton['text']='pause'
-		paused=False
+	if pbutton['state']==ACTIVE:
+		global paused
+		if paused==False :
+			mixer.music.pause()
+			pbutton['text']="play"
+			paused=True
+		else :
+			mixer.music.unpause()
+			pbutton['text']='pause'
+			paused=False
 
 def volume_up():
 	global volume,VolumebarSlide,VolumebarLabel,muteun,muted
